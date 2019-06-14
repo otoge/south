@@ -8,14 +8,7 @@
 						{{filter.form|crispy}}
 					</div>
 				</form>
-    <!--<form action="" method="POST">-->
-        <!--{{ formset.management_form }}-->
-        <!--{% for form in formset %}-->
-            <!--{{ form }}<br>-->
-        <!--{% endfor %}-->
-        <!--{% csrf_token %}-->
-        <!--<button type="submit">検索</button>-->
-    <!--</form>-->
+
 </header>
 <div class="container" id="hogehoge">
     <hr>
@@ -24,6 +17,9 @@
     {% if profile_list == False%}
     <a>no result</a>
     {% endif %}
+    		<div class="col-12">
+			{% include "./_pagination.html" %}
+		</div>
     {% for item in item_list %}
 
 <span style="text-align:center; font-weight:bold">

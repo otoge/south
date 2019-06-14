@@ -21,6 +21,17 @@ class ItemFilterView(FilterView):
 
     paginate_by = 10
 
+    def get(self, request, **kwargs):
+        if request.GET:
+            request.session['query'] = request.GET
+        else:
+            request.GET = request.GET.copy()
+            if 'query' in request.session.keys():
+                for key in request.session['query'].keys():
+                    request.GET[key] = request.session['query'][key]
+
+        return super().get(request, **kwargs)
+
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
