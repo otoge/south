@@ -1,30 +1,36 @@
 {% extends "./base.html" %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 <header class="sticky-top" id="sticky">
-    <form action="" method="POST">
-        {{ formset.management_form }}
-        {% for form in formset %}
-            {{ form }}<br>
-        {% endfor %}
-        {% csrf_token %}
-        <button type="submit">検索</button>
-    </form>
+    				<form id="filter" method="get">
+					<div class="modal-body">
+						{{filter.form|crispy}}
+					</div>
+				</form>
+    <!--<form action="" method="POST">-->
+        <!--{{ formset.management_form }}-->
+        <!--{% for form in formset %}-->
+            <!--{{ form }}<br>-->
+        <!--{% endfor %}-->
+        <!--{% csrf_token %}-->
+        <!--<button type="submit">検索</button>-->
+    <!--</form>-->
 </header>
 <div class="container" id="hogehoge">
     <hr>
 
-    {% if kensaku == True %}
+    {% if get_flag == True %}
     {% if profile_list == False%}
     <a>no result</a>
     {% endif %}
-    {% for profile in profile_list %}
+    {% for item in item_list %}
 
 <span style="text-align:center; font-weight:bold">
-{{profile.speaker}}
+{{item.speaker}}
 </span>
-<div class="inline-block_test">{{ profile.script |truncatewords:15}}</div>
-        <a href="{% url 'detail' profile.pk %}"> show detail </a>
+<div class="inline-block_test">{{ item.script |truncatewords:15}}</div>
+        <a href="{% url 'detail' item.pk %}"> show detail </a>
 
         <hr>
 

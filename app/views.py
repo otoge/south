@@ -5,6 +5,33 @@ from .forms import ProfileSearchFormSet, ProfileSearchForm
 from django.shortcuts import redirect
 from django.views.generic import DetailView
 
+from django_filters.views import FilterView
+from .filters import ItemFilter
+
+
+class ItemFilterView(FilterView):
+    model = Item
+
+    template_name = "profile_list.html"
+
+    # queryset = Item.objects.all().order_by('name')
+
+    filterset_class = ItemFilter
+    strict = False
+
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        if self.request.GET:
+            temp_item = self.request.GET.copy()
+            # print(temp_item)
+            # print(self.request.session['query'])
+            context["get_flag"] = True
+        return context
+    pass
+
 
 # Create your views here.
 def home_page(request):
