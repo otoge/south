@@ -20,6 +20,12 @@ class Title(models.Model):
         max_length=200,
     )
 
+    url = models.URLField(
+        verbose_name='URL',
+        max_length=200,
+        default="",
+    )
+
 
 class Item(models.Model):
 

@@ -1,12 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<a>this is {{item.speaker}}</a>
 
-<a href="http://southpark.cc.com/full-episodes/s01e03"> Watch episode </a>
-</body>
-</html>
+{% extends "./base.html" %}
+{% load item_extras %}
+{% load static %}
+{% block content %}
+<div class="container">
+
+
+<div class="jumbotron" style="width:30rem;">
+  <h1 class="display-4">{% replace_underbar item.title.title %}</h1>
+  <p class="lead">This is a simple hero unit ...</p>
+  <hr class="my-4">
+  <p>It uses utility classes for ...</p>
+  <a class="btn btn-primary btn-lg" href="{{ item.title.url }}" role="button">Watch Episode!</a>
+</div>
+
+
+    <div class="container">
+
+  <section>
+
+
+    <p>
+      <button type="button" class="btn btn-default hogeo" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke">
+        <span class="glyphicon glyphicon-heart text-danger" aria-hidden="true"></span>お気に入りに追加
+      </button>
+    </p>
+    <p>クリックするとポップアップが表示され、ポップアップ内に追加されたメッセージが表示され、3秒後にポップアップが消え、ボタンがクリック出来なくなります。</p>
+  </section>
+
+
+
+
+<button id="buta">ボタン</button>
+
+</div>
+
+    <p>
+  <a href="#" data-toggle="popover" id="myPopover" data-content="ココにポップオーバーが表示">ポップオーバーの実例</a>
+</p>
+  <div>
+    <p>ポップオーバーを手動で制御するには、以下のボタンを押す。</p>
+    <input type="button" class="btn btn-primary show-popover" value="表示">
+    <input type="button" class="btn btn-warning hide-popover" value="隠す">
+    <input type="button" class="btn btn-success toggle-popover" value="切替">
+    <input type="button" class="btn btn-danger dispose-popover" value="破棄">
+  </div>
+
+    {% if item.title.title == "Volcano"%}
+  <script src="{% static 'app/js/check_book.js' %}"></script>
+  {% endif %}
+
+{% endblock %}
