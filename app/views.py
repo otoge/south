@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from .models import Item
+from .models import Item, Profile
 from django.db.models import Q
 from .forms import ProfileSearchFormSet, ProfileSearchForm
 from django.shortcuts import redirect
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
+from django.contrib.auth.models import User
 
 from django_filters.views import FilterView
 from .filters import ItemFilter
@@ -144,8 +145,18 @@ class ItemDetailView(DetailView):
 
 
 class MyView(LoginRequiredMixin, ListView):
-    model = Item
+    model = Profile
     login_url = 'accounts/login/'
     # redirect_field_name = 'home'
     template_name = "user.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        user_name = self.request.user.name
+        u = User.objects.get(username__exact=user_name)
+        p = u.profile.scripts.all()
+        print("if success")
+        context["scripts"] = p
+        return context
 
