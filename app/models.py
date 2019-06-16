@@ -72,7 +72,7 @@ class User(models.Model):
 class Profile(models.Model):
     name = models.CharField("名前", max_length=255)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    scripts = models.ManyToManyField(Item)
+    scripts = models.ManyToManyField(Item, blank=True)
 
     def __str__(self):
         return self.name

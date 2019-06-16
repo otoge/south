@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.db import IntegrityError
+from django.core.exceptions import MultipleObjectsReturned
 
 from django_filters.views import FilterView
 from .filters import ItemFilter
@@ -146,7 +148,7 @@ class ItemDetailView(DetailView):
 
 
 class MyView(LoginRequiredMixin, ListView):
-    model = Profile
+    model = User
     login_url = 'accounts/login/'
     # redirect_field_name = 'home'
     template_name = "user.html"
@@ -156,8 +158,17 @@ class MyView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         user_name = self.request.user.username
         u = User.objects.get(username__exact=user_name)
+        try:
+            obj, created = Profile.objects.get_or_create(name=user_name, user=u)
+            if created:
+                obj.save()
+        except IntegrityError:
+            print("In")
+        except MultipleObjectsReturned:
+            print("Mu")
+        except Exception as e:
+            raise e
         p = u.profile.scripts.all()
-        print("if success")
         context["scripts"] = p
         return context
 
@@ -171,8 +182,24 @@ def ajax_post_add(request):
     # title = request.POST.get('title')
     # post = Post.objects.create(title=title)
     user_name = request.user.username
+    print(type(user_name))
+    item_id = request.POST.get('item_id')
+    print(item_id)
+    script = Item.objects.get(pk=item_id)
+    print(script.speaker)
+    try:
+        obj, created = Profile.objects.get_or_create(name=user_name, user=request.user)
+        if created:
+            obj.save()
+        obj.scripts.add(script)
+    except IntegrityError:
+        print("In")
+    except MultipleObjectsReturned:
+        print("Mu")
+    except Exception as e:
+        raise e
 
     d = {
-        'title': user_name,
+        # 'title': user,
     }
     return JsonResponse(d)

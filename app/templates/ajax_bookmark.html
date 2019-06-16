@@ -41,6 +41,7 @@
                 'type': 'POST',
                 'data': {
                     <!--'title': $('#id_title').val(),  // 記事タイトル-->
+                    'item_id': '{{item.pk}}'
                 },
                 'dataType': 'json'
             }).done( response => {

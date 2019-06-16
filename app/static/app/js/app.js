@@ -11,9 +11,9 @@ $(document).ready(function(){
 
        $("#boke").popover('show');
 
-        setTimeout(function(){
-             $("#boke").popover('destroy');
-        },3000);
+//        setTimeout(function(){
+//             $("#boke").popover('destroy');
+//        },3000);
 
         $(this).addClass("disabled");
 

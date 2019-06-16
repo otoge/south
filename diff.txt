@@ -1,0 +1,173 @@
+diff --git a/app/__pycache__/models.cpython-37.pyc b/app/__pycache__/models.cpython-37.pyc
+index 001e697..06bd43a 100644
+Binary files a/app/__pycache__/models.cpython-37.pyc and b/app/__pycache__/models.cpython-37.pyc differ
+diff --git a/app/__pycache__/views.cpython-37.pyc b/app/__pycache__/views.cpython-37.pyc
+index 38468ce..f564ad6 100644
+Binary files a/app/__pycache__/views.cpython-37.pyc and b/app/__pycache__/views.cpython-37.pyc differ
+diff --git a/app/models.py b/app/models.py
+index e7c854e..b39a50f 100644
+--- a/app/models.py
++++ b/app/models.py
+@@ -72,7 +72,7 @@ class User(models.Model):
+ class Profile(models.Model):
+     name = models.CharField("名前", max_length=255)
+     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+-    scripts = models.ManyToManyField(Item)
++    scripts = models.ManyToManyField(Item, blank=True)
+ 
+     def __str__(self):
+         return self.name
+diff --git a/app/static/app/js/app.js b/app/static/app/js/app.js
+index 612c0ad..3494f02 100644
+--- a/app/static/app/js/app.js
++++ b/app/static/app/js/app.js
+@@ -11,9 +11,9 @@ $(document).ready(function(){
+ 
+        $("#boke").popover('show');
+ 
+-        setTimeout(function(){
+-             $("#boke").popover('destroy');
+-        },3000);
++//        setTimeout(function(){
++//             $("#boke").popover('destroy');
++//        },3000);
+ 
+         $(this).addClass("disabled");
+ 
+diff --git a/app/templates/ajax_bookmark.html b/app/templates/ajax_bookmark.html
+index 9b7d098..a35ba4b 100644
+--- a/app/templates/ajax_bookmark.html
++++ b/app/templates/ajax_bookmark.html
+@@ -41,6 +41,7 @@
+                 'type': 'POST',
+                 'data': {
+                     <!--'title': $('#id_title').val(),  // 記事タイトル-->
++                    'item_id': '{{item.pk}}'
+                 },
+                 'dataType': 'json'
+             }).done( response => {
+diff --git a/app/templates/base.html b/app/templates/base.html
+index e577919..711f900 100644
+--- a/app/templates/base.html
++++ b/app/templates/base.html
+@@ -23,7 +23,7 @@
+ </head>
+ <body>
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+-        <a class="navbar-brand" href="#">アプリケーション名</a>
++        <a class="navbar-brand" href="{% url 'app:home'%}">アプリケーション名</a>
+         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false"
+             aria-label="ナビゲーションの切替">
+             <span class="navbar-toggler-icon"></span>
+@@ -35,14 +35,14 @@
+                     <a class="nav-link" href="{% url 'admin:index'%}">管理サイト</a>
+                 </li>
+                 <li class="nav-item">
+-                    <a class="nav-link" href="{% url 'admin:logout'%}">ログアウト</a>
++                    <a class="nav-link" href="{% url 'logout'%}">ログアウト</a>
+                 </li>
+                                 <li class="nav-item">
+                     <a class="nav-link" href="{% url 'login'%}">ログインテスト</a>
+                 </li>
+                     {% if user.is_authenticated %}
+                                 <li class="nav-item">
+-                    <a class="nav-link" href="{% url 'login'%}">ログイン成功</a>
++                    <a class="nav-link" href="{% url 'login'%}">{{user.username}}でログイン成功</a>
+                 </li>
+                                <li class="nav-item">
+                     <a class="nav-link" href="{% url 'logout'%}">{{user.name}}ログアウトしよう</a>
+diff --git a/app/templates/item_detail.html b/app/templates/item_detail.html
+index 01c978b..e0db67b 100644
+--- a/app/templates/item_detail.html
++++ b/app/templates/item_detail.html
+@@ -46,13 +46,10 @@
+     <input type="button" class="btn btn-success toggle-popover" value="切替">
+     <input type="button" class="btn btn-danger dispose-popover" value="破棄">
+   </div>
+-    <button id="bobo" action="{% url 'app:ajax_post_add' %}" method="submit">
+-        送信
+-        {% csrf_token %}
+-    </button>
+-    {% if item.title.title == "Volcano"%}
++
++    <!--{% if item.title.title == "Volcano"%}-->
+     {% include './ajax_bookmark.html' %}
+   <!--<script src="{% static 'app/js/check_book.js' %}"></script>-->
+-  {% endif %}
+-
++  <!--{% endif %}-->
++</div>
+ {% endblock %}
+\ No newline at end of file
+diff --git a/app/templates/user.html b/app/templates/user.html
+index 915f4b6..b2deb16 100644
+--- a/app/templates/user.html
++++ b/app/templates/user.html
+@@ -7,12 +7,14 @@
+ </head>
+ <body>
+ <a>{{user.username}}</a>
+-<a>{{user.profile.name}}</a>
++
++
+ 
+ {% for script in scripts %}
+ <a>---------</a>
+ {{script.title_is}}
+ {{script.speaker}}
+-{% endfor%}
++{% endfor %}
++
+ </body>
+ </html>
+\ No newline at end of file
+diff --git a/app/views.py b/app/views.py
+index 34e8ab8..d3f6fd9 100644
+--- a/app/views.py
++++ b/app/views.py
+@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
+ from django.views.generic import ListView
+ from django.contrib.auth.models import User
+ from django.http import JsonResponse
++from django.db import IntegrityError
++from django.core.exceptions import MultipleObjectsReturned
+ 
+ from django_filters.views import FilterView
+ from .filters import ItemFilter
+@@ -157,7 +159,6 @@ class MyView(LoginRequiredMixin, ListView):
+         user_name = self.request.user.username
+         u = User.objects.get(username__exact=user_name)
+         p = u.profile.scripts.all()
+-        print("if success")
+         context["scripts"] = p
+         return context
+ 
+@@ -171,8 +172,24 @@ def ajax_post_add(request):
+     # title = request.POST.get('title')
+     # post = Post.objects.create(title=title)
+     user_name = request.user.username
++    print(type(user_name))
++    item_id = request.POST.get('item_id')
++    print(item_id)
++    script = Item.objects.get(pk=item_id)
++    print(script.speaker)
++    try:
++        obj, created = Profile.objects.get_or_create(name=user_name, user=request.user)
++        if created:
++            obj.save()
++        obj.scripts.add(script)
++    except IntegrityError:
++        print("In")
++    except MultipleObjectsReturned:
++        print("Mu")
++    except Exception as e:
++        raise e
+ 
+     d = {
+-        'title': user_name,
++        # 'title': user,
+     }
+     return JsonResponse(d)
+diff --git a/db.sqlite3 b/db.sqlite3
+index 8a2c9f9..e84b4d3 100644
+Binary files a/db.sqlite3 and b/db.sqlite3 differ
