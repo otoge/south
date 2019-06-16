@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Item, Profile
+from .models import Item, Profile, Post
 from django.db.models import Q
 from .forms import ProfileSearchFormSet, ProfileSearchForm
 from django.shortcuts import redirect
@@ -7,6 +7,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 from django_filters.views import FilterView
 from .filters import ItemFilter
@@ -153,10 +154,25 @@ class MyView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
-        user_name = self.request.user.name
+        user_name = self.request.user.username
         u = User.objects.get(username__exact=user_name)
         p = u.profile.scripts.all()
         print("if success")
         context["scripts"] = p
         return context
 
+
+class PostList(ListView):
+    model = Post
+    template_name = "ajax_test.html"
+
+
+def ajax_post_add(request):
+    # title = request.POST.get('title')
+    # post = Post.objects.create(title=title)
+    user_name = request.user.username
+
+    d = {
+        'title': user_name,
+    }
+    return JsonResponse(d)
