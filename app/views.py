@@ -4,6 +4,8 @@ from django.db.models import Q
 from .forms import ProfileSearchFormSet, ProfileSearchForm
 from django.shortcuts import redirect
 from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 
 from django_filters.views import FilterView
 from .filters import ItemFilter
@@ -139,3 +141,11 @@ def home_page(request):
 class ItemDetailView(DetailView):
     model = Item
     template_name = "item_detail.html"
+
+
+class MyView(LoginRequiredMixin, ListView):
+    model = Item
+    login_url = 'accounts/login/'
+    # redirect_field_name = 'home'
+    template_name = "user.html"
+
