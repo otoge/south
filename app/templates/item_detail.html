@@ -21,7 +21,8 @@
 
 
     <p>
-      <button type="button" class="btn btn-default hogeo" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke">
+      <button type="button" class="btn btn-default hogeo" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke"
+      action="{% url 'app:ajax_post_add' %}" method="submit">
         <span class="glyphicon glyphicon-heart text-danger" aria-hidden="true"></span>お気に入りに追加
       </button>
     </p>
@@ -45,9 +46,13 @@
     <input type="button" class="btn btn-success toggle-popover" value="切替">
     <input type="button" class="btn btn-danger dispose-popover" value="破棄">
   </div>
-
+    <button id="bobo" action="{% url 'app:ajax_post_add' %}" method="submit">
+        送信
+        {% csrf_token %}
+    </button>
     {% if item.title.title == "Volcano"%}
-  <script src="{% static 'app/js/check_book.js' %}"></script>
+    {% include './ajax_bookmark.html' %}
+  <!--<script src="{% static 'app/js/check_book.js' %}"></script>-->
   {% endif %}
 
 {% endblock %}
