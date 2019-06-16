@@ -26,10 +26,16 @@ class Title(models.Model):
         default="",
     )
 
+    @property
+    def season_is(self):
+        return self.season.season
+
+
+
 
 class Item(models.Model):
 
-    title = models.ForeignKey(Title, on_delete=models.CASCADE)
+    title = models.ForeignKey(Title, on_delete=models.CASCADE, blank=True, null=True)
 
     progress = models.IntegerField(
         verbose_name='進行度',
@@ -48,3 +54,15 @@ class Item(models.Model):
         blank=True,
         null=True,
     )
+
+    @property
+    def title_is(self):
+        return self.title.title
+
+
+class User(models.Model):
+    name = models.CharField(max_length=128)
+    scripts = models.ManyToManyField(Item)
+
+    def __str__(self):
+        return self.name
