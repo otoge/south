@@ -77,6 +77,11 @@ class Profile(models.Model):
     def __str__(self):
         return self.name
 
+    def my_function(self):
+        # Return some calculated value based on the entry
+        my_value = "korede"
+        return my_value
+
 
 class Post(models.Model):
     title = models.CharField('タイトル', max_length=255)

@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import home_page, ItemDetailView, ItemFilterView, MyView, ajax_post_add, PostList
+from django.conf.urls import include, url
+
 
 app_name = "app"
 

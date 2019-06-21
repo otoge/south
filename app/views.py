@@ -14,6 +14,8 @@ from django.core.exceptions import MultipleObjectsReturned
 from django_filters.views import FilterView
 from .filters import ItemFilter
 
+from django_tables2 import RequestConfig
+from .tables import PersonTable
 
 class ItemFilterView(FilterView):
     model = Item
@@ -148,15 +150,23 @@ class ItemDetailView(DetailView):
 
 
 class MyView(LoginRequiredMixin, ListView):
-    model = User
+    model = Profile
     login_url = 'accounts/login/'
     # redirect_field_name = 'home'
     template_name = "user.html"
 
+
+
+
     def get_context_data(self, **kwargs):
+        user_name = self.request.user.username
+        person = Profile.objects.get(name=user_name)
+
+        table = PersonTable(person.scripts.all())
+        RequestConfig(self.request).configure(table)
 
         context = super().get_context_data(**kwargs)
-        user_name = self.request.user.username
+
         u = User.objects.get(username__exact=user_name)
         try:
             obj, created = Profile.objects.get_or_create(name=user_name, user=u)
@@ -170,6 +180,7 @@ class MyView(LoginRequiredMixin, ListView):
             raise e
         p = u.profile.scripts.all()
         context["scripts"] = p
+        context["table"] = table
         return context
 
 
