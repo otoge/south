@@ -75,7 +75,11 @@
 });</script>
 
 <script src="{% static 'app/js/app.js' %}"></script>
+<script>
+    $("button.btn-danger").after('{% csrf_token %}')
 
+
+</script>
 
 </body>
 </html>

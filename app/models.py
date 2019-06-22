@@ -72,7 +72,7 @@ class User(models.Model):
 class Profile(models.Model):
     name = models.CharField("名前", max_length=255)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    scripts = models.ManyToManyField(Item, blank=True)
+    scripts = models.ManyToManyField(Item, blank=True, through='Quote')
 
     def __str__(self):
         return self.name
@@ -88,3 +88,21 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Quote(models.Model):
+        script = models.ForeignKey(Item, on_delete=models.CASCADE)
+        owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+        date_joined = models.DateField(auto_now_add=True)
+
+        def get_script(self):
+            script = self.script.script
+            return script
+
+        def get_speaker(self):
+            speaker = self.script.speaker
+            return speaker
+
+        def get_id(self):
+            i_id = self.script.pk
+            return i_id

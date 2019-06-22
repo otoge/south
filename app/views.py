@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Item, Profile, Post
+from .models import Item, Profile, Post, Quote
 from django.db.models import Q
 from .forms import ProfileSearchFormSet, ProfileSearchForm
 from django.shortcuts import redirect
@@ -162,7 +162,7 @@ class MyView(LoginRequiredMixin, ListView):
         user_name = self.request.user.username
         person = Profile.objects.get(name=user_name)
 
-        table = PersonTable(person.scripts.all())
+        table = PersonTable(Quote.objects.all())
         RequestConfig(self.request).configure(table)
 
         context = super().get_context_data(**kwargs)
@@ -181,7 +181,15 @@ class MyView(LoginRequiredMixin, ListView):
         p = u.profile.scripts.all()
         context["scripts"] = p
         context["table"] = table
+
         return context
+
+    def post(self, request, *args, **kwargs):
+        print("worked")
+        p_id = self.request.POST.get('b_name')
+        print(p_id)
+        return redirect("app:user")
+
 
 
 class PostList(ListView):
