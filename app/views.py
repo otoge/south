@@ -250,6 +250,15 @@ class MyView(LoginRequiredMixin, ListView):
     def post(self, request, *args, **kwargs):
         print("worked")
         p_id = self.request.POST.get('b_name')
+        u = self.request.user.username
+        p = Profile.objects.get(name=u)
+        s_id = Item.objects.get(pk=p_id)
+        try:
+            q = Quote.objects.get(owner=p, script=s_id)
+            q.delete()
+        except Exception as e:
+            print(e)
+
         print(p_id)
         return redirect("app:user")
 
