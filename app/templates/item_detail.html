@@ -20,9 +20,20 @@
   <section>
           {% if user.is_authenticated %}
         {% if bookmarked == True %}
-    <a>お気に入り済</a>
+          <p>
+      <button type="button" class="btn btn-default hogeo disable" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke"
+      action="{% url 'app:ajax_post_add' %}" method="submit">
+        <span class="glyphicon glyphicon-heart text-danger" aria-hidden="true"></span>お気に入りに追加済みです
+      </button>
+    </p>
         {% else %}
-      <a>お気に入り登録</a>
+          <p>
+      <button type="button" class="btn btn-default hogeo" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke"
+      action="{% url 'app:ajax_post_add' %}" method="submit">
+        <span class="glyphicon glyphicon-heart text-danger" aria-hidden="true"></span>お気に入りに追加
+      </button>
+    </p>
+    <p>クリックするとポップアップが表示され、ポップアップ内に追加されたメッセージが表示され、3秒後にポップアップが消え、ボタンがクリック出来なくなります。</p>
     {% endif %}
       {% else %}
       <a>ユーザー登録</a>
@@ -31,13 +42,7 @@
 
 
 
-    <p>
-      <button type="button" class="btn btn-default hogeo" data-toggle="popover" data-content="お気に入りリストに追加しました"  data-placement="top" id="boke"
-      action="{% url 'app:ajax_post_add' %}" method="submit">
-        <span class="glyphicon glyphicon-heart text-danger" aria-hidden="true"></span>お気に入りに追加
-      </button>
-    </p>
-    <p>クリックするとポップアップが表示され、ポップアップ内に追加されたメッセージが表示され、3秒後にポップアップが消え、ボタンがクリック出来なくなります。</p>
+
   </section>
 
 

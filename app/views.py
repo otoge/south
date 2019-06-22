@@ -274,6 +274,8 @@ def ajax_post_add(request):
         if created:
             obj.save()
         obj.scripts.add(script)
+        # q = Quote(script=script, owner=obj)
+        # q.save()
     except IntegrityError:
         print("In")
     except MultipleObjectsReturned:
