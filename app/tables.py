@@ -35,10 +35,16 @@ class ImageColumn(tables.Column):
     def render(self, value):
 
 
-        text = format_html('<form name="action" method="POST" value="form_v"><button type="submit" name="b_name" class="btn btn-danger" value={}>お気に入りから削除</button></form>', value)
+        text = format_html('<button type="submit" name="b_name" class="btn btn-danger del_confirm" data-toggle="modal" data-target="#deleteModal" data-pk={}>お気に入りから削除</button>', value)
         print(text)
         return text
 
+
+# class DetailLinkColumn(tables.Column):
+#
+#     def render(self, value):
+#         link = format_html(r'<a href=""../detail//"">詳細<a>', value)
+#         return link
 
 
 class PersonTable(tables.Table):
@@ -68,6 +74,9 @@ class PersonTable(tables.Table):
                                     verbose_name='My calculated value',
                                     orderable=False
                                     )
+
+
+
 
     extra_button = ImageColumn(accessor="get_id"
 

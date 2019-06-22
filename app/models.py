@@ -106,3 +106,6 @@ class Quote(models.Model):
         def get_id(self):
             i_id = self.script.pk
             return i_id
+
+
+

@@ -82,6 +82,16 @@
 
 
 </script>
-
+<script>
+$(function() {
+  $('.del_confirm').on('click', function () {
+  console.log("ulyyyyy");
+    console.log(($(this).data("pk")));
+     $("#del_pk").text($(this).data("pk"));
+     $('#del_url').attr('value', $(this).data("pk"));
+  });
+});
+</script>
+    <link href="{% static 'app/css/danger.css' %}" rel="stylesheet">
 </body>
 </html>
