@@ -148,6 +148,38 @@ class ItemDetailView(DetailView):
     model = Item
     template_name = "item_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            print("logined")
+            user_name = self.request.user.username
+            person = Profile.objects.get(name=user_name)
+
+            s_id = self.kwargs["pk"]
+            print(s_id)
+
+            owner_id = person.pk
+            Quote.objects.filter(owner=2)
+
+            p_list = Profile.objects.filter(scripts=s_id)
+            print(p_list)
+
+            item = Item.objects.get(pk=s_id)
+            print(item)
+
+            if person in p_list:
+                context["bookmarked"] = True
+
+            # try:
+            #     a = person.objects.get(pk=s_id)
+            #
+            # except Exception as e:
+            #     print(e)
+
+        else:
+            print("logouted")
+        return context
+
 
 class MyView(LoginRequiredMixin, ListView):
 

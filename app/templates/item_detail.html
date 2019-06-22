@@ -18,6 +18,17 @@
     <div class="container">
 
   <section>
+          {% if user.is_authenticated %}
+        {% if bookmarked == True %}
+    <a>お気に入り済</a>
+        {% else %}
+      <a>お気に入り登録</a>
+    {% endif %}
+      {% else %}
+      <a>ユーザー登録</a>
+
+      {% endif %}
+
 
 
     <p>
@@ -37,6 +48,7 @@
 </div>
 
     <p>
+
   <a href="#" data-toggle="popover" id="myPopover" data-content="ココにポップオーバーが表示">ポップオーバーの実例</a>
 </p>
   <div>
@@ -46,6 +58,8 @@
     <input type="button" class="btn btn-success toggle-popover" value="切替">
     <input type="button" class="btn btn-danger dispose-popover" value="破棄">
   </div>
+
+
 
     {% include './ajax_bookmark.html' %}
   <!--<script src="{% static 'app/js/check_book.js' %}"></script>-->
