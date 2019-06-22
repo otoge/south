@@ -91,7 +91,7 @@ class Post(models.Model):
 
 
 class Quote(models.Model):
-        script = models.ForeignKey(Item, on_delete=models.CASCADE)
+        script = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True)
         owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
         date_joined = models.DateField(auto_now_add=True)
 

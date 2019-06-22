@@ -150,19 +150,50 @@ class ItemDetailView(DetailView):
 
 
 class MyView(LoginRequiredMixin, ListView):
+
     model = Profile
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     # redirect_field_name = 'home'
     template_name = "user.html"
 
+    def get(self, request, *args, **kwargs):
+        user_name = self.request.user.username
 
+        u = User.objects.get(username__exact=user_name)
 
+        try:
+            obj, created = Profile.objects.get_or_create(name=user_name, user=u)
+            if created:
+                obj.save()
+                q = Quote(owner=obj)
+                q.save()
+        except IntegrityError:
+            print("In")
+        except MultipleObjectsReturned:
+            print("Mu")
+        except Exception as e:
+            raise e
+        return super().get(request, **kwargs)
 
     def get_context_data(self, **kwargs):
         user_name = self.request.user.username
         person = Profile.objects.get(name=user_name)
+        aaaa = Quote.objects.all()
+        print(aaaa)
+        bbbb = Quote.objects.filter(owner=2)
+        print(bbbb)
 
-        table = PersonTable(Quote.objects.all())
+        owner_id = person.pk
+
+        print(owner_id)
+
+        table = PersonTable(Quote.objects.filter(owner=owner_id))
+
+
+
+        # table = PersonTable(Quote.objects.all())
+        print(table)
+        # table = PersonTable(Quote.objects.get(owner=user_name))
         RequestConfig(self.request).configure(table)
 
         context = super().get_context_data(**kwargs)
