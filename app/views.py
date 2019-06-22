@@ -242,8 +242,15 @@ class MyView(LoginRequiredMixin, ListView):
         except Exception as e:
             raise e
         p = u.profile.scripts.all()
+        if len(p) == 0:
+            empty_flag = True
+        else:
+            empty_flag = False
+        print(empty_flag)
+
         context["scripts"] = p
         context["table"] = table
+        context["is_empty"] = empty_flag
 
         return context
 

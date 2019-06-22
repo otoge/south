@@ -16,8 +16,12 @@
 {% endfor %}
 
 
+{% if is_empty == False %}
 
 {% render_table table %}
+{% else %}
+<a href="{% url 'app:home'%}">お気に入りのセリフを登録しよう！</a>
+{% endif %}
 
 
 

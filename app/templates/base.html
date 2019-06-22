@@ -75,6 +75,8 @@
 });</script>
 
 <script src="{% static 'app/js/app.js' %}"></script>
+  <script src="{% static 'app/js/pop_for_non_user.js' %}"></script>
+
 <script>
     $("button.btn-danger").after('{% csrf_token %}')
 
