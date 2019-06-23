@@ -5,7 +5,7 @@ from collections import defaultdict
 file_list = []
 speaker_list = []
 
-file = open("手動で[]外す[]削除発話者付加発話者かぶり消すS1だけ.txt", "r", encoding="utf-8_sig")
+file = open("season1.txt", "r", encoding="utf-8_sig")
 
 for i, f in enumerate(file):
     splited_text = f.split()
